@@ -22,6 +22,10 @@ ALLOWED_HOSTS = os.environ.get(
     "life-celebration-arena.onrender.com,localhost,127.0.0.1"
 ).split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://life-celebration-arena.onrender.com",
+]
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
