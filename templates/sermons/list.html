@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Sermons - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Sermons</h1>
+        <p data-aos="fade-up">Watch and listen to messages that inspire faith</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Search & Filter -->
+        <div class="form-section mb-5" data-aos="fade-up">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Search</label>
+                    {{ search_form.q }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Speaker</label>
+                    {{ search_form.speaker }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From</label>
+                    {{ search_form.date_from }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To</label>
+                    {{ search_form.date_to }}
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-gold w-100"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-4">
+            {% for sermon in sermons %}
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="card card-custom sermon-card">
+                    <div class="position-relative">
+                        {% if sermon.thumbnail %}
+                        <img src="{{ sermon.thumbnail.url }}" class="card-img-top" alt="{{ sermon.title }}" loading="lazy">
+                        {% else %}
+                        <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height:200px">
+                            <i class="fas fa-book-bible fa-3x text-white"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <span class="card-badge">{{ sermon.date_preached|date:"M j, Y" }}</span>
+                        {% if sermon.series %}<span class="badge bg-secondary ms-1">{{ sermon.series }}</span>{% endif %}
+                        <h5 class="card-title mt-2">{{ sermon.title }}</h5>
+                        <p class="text-muted"><i class="fas fa-user me-1"></i>{{ sermon.speaker }}</p>
+                        {% if sermon.scripture_reference %}
+                        <p class="small"><i class="fas fa-bible me-1"></i>{{ sermon.scripture_reference }}</p>
+                        {% endif %}
+                        <a href="{% url 'sermons:detail' sermon.slug %}" class="btn btn-sm btn-gold">View Sermon</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-5">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <p>No sermons found matching your criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

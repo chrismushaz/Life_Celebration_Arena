@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Give Online - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Give Online</h1>
+        <p data-aos="fade-up">Your generosity makes a difference in our community</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-section" data-aos="fade-up">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Amount</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for value, label in form.preset_amount.field.choices %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="preset_amount" value="{{ value }}" id="amount{{ value }}">
+                                    <label class="form-check-label" for="amount{{ value }}">{{ label }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-gold w-100 mt-3">
+                            <i class="fas fa-heart me-2"></i>Give Now
+                        </button>
+                    </form>
+                    <p class="text-muted small mt-3 text-center">
+                        <i class="fas fa-lock me-1"></i>Secure giving powered by Life Celebration Arena
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

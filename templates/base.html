@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {# SEO Meta Tags #}
+    <title>{% block title %}{% if church %}{{ church.name }}{% else %}Life Celebration Arena{% endif %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% if church %}{{ church.motto }}. Join us for worship, fellowship, and community outreach.{% else %}Life Celebration Arena - Growing Together in Faith, Hope, and Love{% endif %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}church, worship, sermons, community, faith, Life Celebration Arena{% endblock %}">
+    <meta name="author" content="Life Celebration Arena">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    {# Open Graph Tags #}
+    <meta property="og:title" content="{% block og_title %}{% block title_plain %}{% if church %}{{ church.name }}{% else %}Life Celebration Arena{% endif %}{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% if church %}{{ church.motto }}{% else %}Growing Together in Faith, Hope, and Love{% endif %}{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="Life Celebration Arena">
+    {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}">{% endblock %}
+
+    {# Structured Data #}
+    {% if church %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Church",
+        "name": "{{ church.name }}",
+        "description": "{{ church.motto }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ church.address }}",
+            "addressLocality": "{{ church.city }}",
+            "addressRegion": "{{ church.state }}",
+            "postalCode": "{{ church.zip_code }}"
+        },
+        "telephone": "{{ church.phone }}",
+        "email": "{{ church.email }}",
+        "url": "{{ request.scheme }}://{{ request.get_host }}"
+    }
+    </script>
+    {% endif %}
+
+    {# Bootstrap 5 CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Font Awesome #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    {# Google Fonts #}
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {# AOS Animations #}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    {# GLightbox #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    {# Custom CSS #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {# Navigation #}
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'contact:home' %}">
+               <img src="{% static 'images/og-default.png' %}" alt="Logo" class="me-2" style="height: 50px;">
+                {% if church %}{{ church.name }}{% else %}Life Celebration Arena{% endif %}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact:about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ministries:list' %}">Ministries</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'sermons:list' %}">Sermons</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'events:list' %}">Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'gallery:gallery' %}">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog:list' %}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'prayer:submit' %}">Prayer</a></li>
+                    <li class="nav-item"><a class="nav-link btn-give ms-lg-2" href="{% url 'donations:give' %}">Give</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="btn btn-link nav-link theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>{{ user.first_name|default:user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'donations:history' %}">Giving History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {# Messages #}
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Main Content #}
+    <main>{% block content %}{% endblock %}</main>
+
+    {# Footer #}
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5><i class="fas fa-cross me-2"></i>{% if church %}{{ church.name }}{% else %}Life Celebration Arena{% endif %}</h5>
+                    <p class="text-muted">{% if church %}{{ church.motto }}{% else %}Growing Together in Faith, Hope, and Love{% endif %}</p>
+                    {% if church %}
+                    <div class="social-links">
+                        {% if church.facebook_url %}<a href="{{ church.facebook_url }}" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>{% endif %}
+                        {% if church.youtube_url %}<a href="{{ church.youtube_url }}" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>{% endif %}
+                        {% if church.instagram_url %}<a href="{{ church.instagram_url }}" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'contact:about' %}">About Us</a></li>
+                        <li><a href="{% url 'sermons:list' %}">Sermons</a></li>
+                        <li><a href="{% url 'events:list' %}">Events</a></li>
+                        <li><a href="{% url 'contact:contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Contact Info</h5>
+                    {% if church %}
+                    <p><i class="fas fa-map-marker-alt me-2"></i>{{ church.full_address }}</p>
+                    <p><i class="fas fa-phone me-2"></i>{{ church.phone }}</p>
+                    <p><i class="fas fa-envelope me-2"></i>{{ church.email }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <hr>
+            <div class="text-center text-muted">
+                <p>&copy; {% now "Y" %} Life Celebration Arena. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {# Scripts #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

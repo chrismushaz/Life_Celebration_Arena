@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">{{ event.title }}</h1>
+        <p data-aos="fade-up">
+            <i class="fas fa-calendar me-1"></i>{{ event.start_date|date:"F j, Y g:i A" }}
+            {% if event.location %} &middot; <i class="fas fa-map-marker-alt me-1"></i>{{ event.location }}{% endif %}
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8" data-aos="fade-up">
+                {% if event.image %}
+                <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid rounded mb-4" loading="lazy">
+                {% endif %}
+                {{ event.description|linebreaks }}
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="form-section">
+                    <h5>Event Details</h5>
+                    <p><strong>Date:</strong> {{ event.start_date|date:"F j, Y" }}</p>
+                    <p><strong>Time:</strong> {{ event.start_date|date:"g:i A" }}</p>
+                    {% if event.end_date %}<p><strong>Ends:</strong> {{ event.end_date|date:"F j, Y g:i A" }}</p>{% endif %}
+                    {% if event.location %}<p><strong>Location:</strong> {{ event.location }}</p>{% endif %}
+                    {% if event.registration_required %}
+                    <a href="{% url 'events:register' event.slug %}" class="btn btn-gold w-100 mt-3">
+                        <i class="fas fa-ticket-alt me-2"></i>Register Now
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

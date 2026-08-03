@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Ministries - Grace Community Church{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Our Ministries</h1>
+        <p data-aos="fade-up">Find your place to serve and grow</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% for ministry in ministries %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="card card-custom text-center p-4">
+                    <div class="ministry-icon mx-auto">
+                        {% if ministry.ministry_type == 'children' %}<i class="fas fa-child"></i>
+                        {% elif ministry.ministry_type == 'youth' %}<i class="fas fa-users"></i>
+                        {% elif ministry.ministry_type == 'women' %}<i class="fas fa-female"></i>
+                        {% elif ministry.ministry_type == 'men' %}<i class="fas fa-male"></i>
+                        {% elif ministry.ministry_type == 'worship' %}<i class="fas fa-music"></i>
+                        {% elif ministry.ministry_type == 'evangelism' %}<i class="fas fa-hands-praying"></i>
+                        {% elif ministry.ministry_type == 'outreach' %}<i class="fas fa-hand-holding-heart"></i>
+                        {% else %}<i class="fas fa-church"></i>{% endif %}
+                    </div>
+                    <h4>{{ ministry.name }}</h4>
+                    <p class="text-muted">{{ ministry.description|truncatewords:25 }}</p>
+                    {% if ministry.meeting_time %}
+                    <p class="small"><i class="fas fa-clock me-1"></i>{{ ministry.meeting_time }}</p>
+                    {% endif %}
+                    <a href="{% url 'ministries:detail' ministry.slug %}" class="btn btn-sm btn-gold">Learn More</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-5">
+                <p>Ministry information coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

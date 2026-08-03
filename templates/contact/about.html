@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">About Us</h1>
+        <nav class="breadcrumb-nav" data-aos="fade-up">
+            <a href="{% url 'contact:home' %}">Home</a> / About Us
+        </nav>
+    </div>
+</section>
+
+{% if church %}
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4" data-aos="fade-right">
+                <h2>Our History</h2>
+                <p>{{ church.history|linebreaks }}</p>
+            </div>
+            <div class="col-lg-6 mb-4" data-aos="fade-left">
+                <h2>Our Mission</h2>
+                <p>{{ church.mission|linebreaks }}</p>
+                <h2 class="mt-4">Our Vision</h2>
+                <p>{{ church.vision|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section pastor-section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Core Values</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <ul class="values-list">
+                    {% for value in church.core_values.splitlines %}
+                    {% if value.strip %}
+                    <li><i class="fas fa-check-circle"></i>{{ value.strip }}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="section">
+    <div class="container">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Leadership Team</h2>
+            <p class="section-subtitle">Meet the people who serve our congregation</p>
+        </div>
+        <div class="row g-4">
+            {% for leader in leadership %}
+            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="leader-card">
+                    {% if leader.photo %}
+                    <img src="{{ leader.photo.url }}" alt="{{ leader.name }}" class="leader-photo" loading="lazy">
+                    {% else %}
+                    <div class="leader-photo d-inline-flex align-items-center justify-content-center bg-primary text-white mx-auto">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                    {% endif %}
+                    <h5>{{ leader.name }}</h5>
+                    <p class="leader-role">{{ leader.get_role_display }}</p>
+                    <p class="text-muted small">{{ leader.bio|truncatewords:30 }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted">
+                <p>Leadership information coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contact Us - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Contact Us</h1>
+        <nav class="breadcrumb-nav" data-aos="fade-up">
+            <a href="{% url 'contact:home' %}">Home</a> / Contact
+        </nav>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                {% if church %}
+                <h3>Get in Touch</h3>
+                <div class="mb-4">
+                    <p><i class="fas fa-map-marker-alt me-2 text-warning"></i><strong>Address:</strong><br>{{ church.full_address }}</p>
+                    <p><i class="fas fa-phone me-2 text-warning"></i><strong>Phone:</strong><br>{{ church.phone }}</p>
+                    <p><i class="fas fa-envelope me-2 text-warning"></i><strong>Email:</strong><br>{{ church.email }}</p>
+                </div>
+                <h4>Office Hours</h4>
+                <p>{{ church.office_hours|linebreaks }}</p>
+                {% if church.google_maps_embed %}
+                <div class="ratio ratio-16x9 mt-4">
+                    <iframe src="{{ church.google_maps_embed }}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="form-section">
+                    <h3>Send Us a Message</h3>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-gold mt-3"><i class="fas fa-paper-plane me-2"></i>Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

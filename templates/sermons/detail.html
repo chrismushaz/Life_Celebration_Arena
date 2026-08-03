@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ sermon.title }} - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">{{ sermon.title }}</h1>
+        <p data-aos="fade-up">
+            <i class="fas fa-user me-1"></i>{{ sermon.speaker }} &middot;
+            {{ sermon.date_preached|date:"F j, Y" }}
+            {% if sermon.scripture_reference %} &middot; {{ sermon.scripture_reference }}{% endif %}
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8" data-aos="fade-up">
+                {% if sermon.youtube_embed_url %}
+                <div class="ratio ratio-16x9 mb-4">
+                    <iframe src="{{ sermon.youtube_embed_url }}" allowfullscreen loading="lazy"></iframe>
+                </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    {{ sermon.description|linebreaks }}
+                </div>
+
+                {% if sermon.audio_file %}
+                <div class="form-section">
+                    <h5><i class="fas fa-headphones me-2"></i>Listen to Audio</h5>
+                    <audio controls class="w-100 mt-2">
+                        <source src="{{ sermon.audio_file.url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <a href="{{ sermon.audio_file.url }}" download class="btn btn-sm btn-gold mt-2">
+                        <i class="fas fa-download me-1"></i>Download Audio
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                {% if related_sermons %}
+                <h4>More from {{ sermon.speaker }}</h4>
+                {% for related in related_sermons %}
+                <div class="card card-custom mb-3">
+                    <div class="card-body">
+                        <h6>{{ related.title }}</h6>
+                        <p class="small text-muted">{{ related.date_preached|date:"M j, Y" }}</p>
+                        <a href="{% url 'sermons:detail' related.slug %}" class="btn btn-sm btn-gold">Watch</a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Profile - Grace Community Church{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container"><h1>Edit Profile</h1></div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="form-section" data-aos="fade-up">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-gold mt-3">Save Changes</button>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

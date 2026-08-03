@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Prayer Requests - Grace Community Church{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Prayer Requests</h1>
+        <p data-aos="fade-up">We are praying with you</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="form-section">
+                    <h3>Submit a Prayer Request</h3>
+                    <p class="text-muted">Your request will be handled with care and confidentiality.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-gold mt-3">
+                            <i class="fas fa-praying-hands me-2"></i>Submit Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <h4>Prayer Wall</h4>
+                {% for req in public_requests %}
+                <div class="comment-box">
+                    <strong>{{ req.display_name }}</strong>
+                    <span class="text-muted small ms-2">{{ req.created_at|date:"M j" }}</span>
+                    <p class="mb-0 mt-1">{{ req.request_text|truncatewords:30 }}</p>
+                </div>
+                {% empty %}
+                <p class="text-muted">No public prayer requests at this time.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

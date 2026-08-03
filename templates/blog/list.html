@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - Life Celebration Arena{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 data-aos="fade-up">Blog & Devotionals</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <form method="get" class="d-flex gap-2">
+                    <input type="text" name="q" class="form-control" placeholder="Search posts..." value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-gold"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'blog:list' %}" class="btn btn-sm {% if not request.GET.type %}btn-gold{% else %}btn-outline-secondary{% endif %}">All</a>
+                    {% for value, label in post_types %}
+                    <a href="?type={{ value }}" class="btn btn-sm {% if request.GET.type == value %}btn-gold{% else %}btn-outline-secondary{% endif %}">{{ label }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="card card-custom">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" loading="lazy">
+                    {% endif %}
+                    <div class="card-body">
+                        <span class="card-badge">{{ post.get_post_type_display }}</span>
+                        <h5 class="card-title mt-2">{{ post.title }}</h5>
+                        <p class="blog-meta">
+                            <i class="fas fa-calendar me-1"></i>{{ post.published_at|date:"M j, Y" }}
+                            {% if post.author %} &middot; {{ post.author.get_full_name|default:post.author.username }}{% endif %}
+                        </p>
+                        <p>{{ post.excerpt|default:post.content|truncatewords:25 }}</p>
+                        <a href="{% url 'blog:detail' post.slug %}" class="btn btn-sm btn-gold">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-5"><p>No blog posts found.</p></div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
