@@ -28,6 +28,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Application definition
 INSTALLED_APPS = [
+     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -146,3 +147,22 @@ if not DEBUG:
 CHURCH_NAME = 'Grace Community Church'
 CHURCH_MOTTO = 'Growing Together in Faith, Hope, and Love'
 CHURCH_TAGLINE = 'A welcoming community where everyone belongs'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Life Celebration Arena Admin",
+    "site_header": "Life Celebration Arena",
+    "site_brand": "Life Celebration Arena",
+    "welcome_sign": "Welcome to the Admin Dashboard",
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "icons": {
+        "accounts": "fas fa-users",
+        "contact": "fas fa-envelope",
+        "events": "fas fa-calendar",
+        "gallery": "fas fa-images",
+        "sermons": "fas fa-book-bible",
+        "donations": "fas fa-hand-holding-heart",
+    },
+}
